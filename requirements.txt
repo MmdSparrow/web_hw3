@@ -1,4 +1,5 @@
-Flask
-psycopg2
+flask
+psycopg2-binary
 kafka-python
-boto3
+minio
+requests

@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # PostgreSQL Configuration
 DB_CONFIG = {
-    "dbname": "file_metadata",
+    "dbname": "simpleapi_database",
     "user": "postgres",
     "password": "postgres",
     "host": "db",
@@ -26,7 +26,7 @@ producer = KafkaProducer(
 
 # API Endpoint to receive file metadata
 @app.route('/upload', methods=['POST'])
-def upload_file_metadata():
+def upload_simpleapi_database():
     data = request.json
     file_address = data.get("file_address")
     file_id = data.get("file_id")
@@ -41,7 +41,7 @@ def upload_file_metadata():
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         cur.execute(
-            "INSERT INTO file_metadata (file_address, file_id, bucket_name, object_name) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO simpleapi_database (file_address, file_id, bucket_name, object_name) VALUES (%s, %s, %s, %s)",
             (file_address, file_id, bucket_name, object_name)
         )
         conn.commit()
