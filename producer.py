@@ -5,7 +5,6 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# PostgreSQL Configuration
 DB_CONFIG = {
     "dbname": "simpleapi_database",
     "user": "postgres",
@@ -14,17 +13,14 @@ DB_CONFIG = {
     "port": 5432
 }
 
-# Kafka Configuration
-KAFKA_BROKER = "kafka:9092"
+KAFKA_BROKER = "9092"
 KAFKA_TOPIC = "file_topic"
 
-# Initialize Kafka Producer
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
     value_serializer=lambda v: json.dumps(v).encode("utf-8")
 )
 
-# API Endpoint to receive file metadata
 @app.route('/upload', methods=['POST'])
 def upload_simpleapi_database():
     data = request.json
