@@ -1,0 +1,25 @@
+# go inside of the container
+docker exec -it ??? bash
+
+# exit from container
+exit
+
+
+postgres:
+
+# list of the databases
+\l
+
+# list of the tables
+\dt
+
+# see row of the table
+SELECT * FROM ?????;
+
+# exit
+\q
+
+kafka-ui:
+
+# see kafka ui in browser
+http://localhost:8080
