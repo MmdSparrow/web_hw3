@@ -2,11 +2,9 @@ import json
 from kafka import KafkaConsumer
 from minio import Minio
 
-# Kafka Configuration
-KAFKA_BROKER = "kafka:9092"
+KAFKA_BROKER = "localhost:9092"
 KAFKA_TOPIC = "file_topic"
 
-# MinIO Configuration
 MINIO_CLIENT = Minio(
     "minio:9000",
     access_key="minioadmin",
@@ -14,7 +12,6 @@ MINIO_CLIENT = Minio(
     secure=False
 )
 
-# Initialize Kafka Consumer
 consumer = KafkaConsumer(
     KAFKA_TOPIC,
     bootstrap_servers=KAFKA_BROKER,

@@ -7,6 +7,11 @@ exit
 
 postgres:
 
+# connect to postgres sql
+psql -U <username>
+
+(username = postgres)
+
 # list of the databases
 \l
 

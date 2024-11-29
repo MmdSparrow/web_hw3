@@ -2,6 +2,7 @@ version: '3.8'
 services:
   db:
     image: postgres:13
+    container_name: postgres_db
     environment:
       POSTGRES_DB: simpleapi_database
       POSTGRES_USER: postgres
@@ -48,6 +49,7 @@ services:
 
   minio:
     image: minio/minio
+    container_name: minio_db
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
@@ -75,17 +77,20 @@ services:
     networks:
       - mynetwork
 
-  # producer:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.producer
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - kafka
-  #     - db
-  #   networks:
-  #     - mynetwork
+  producer:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.producer
+    ports:
+      - "5000:5000"
+    depends_on:
+      - kafka
+      - zookeeper
+      - kafka-ui
+      - db
+    networks:
+      - mynetwork
 
   # consumer:
   #   build:
