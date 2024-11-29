@@ -13,7 +13,7 @@ DB_CONFIG = {
     "port": 5432
 }
 
-KAFKA_BROKER = "9092"
+KAFKA_BROKER = "localhost:9092"
 KAFKA_TOPIC = "file_topic"
 
 producer = KafkaProducer(
@@ -33,7 +33,6 @@ def upload_simpleapi_database():
         return jsonify({"error": "All fields are required"}), 400
 
     try:
-        # Store metadata in PostgreSQL
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         cur.execute(
@@ -44,7 +43,6 @@ def upload_simpleapi_database():
         cur.close()
         conn.close()
 
-        # Publish to Kafka
         producer.send(KAFKA_TOPIC, data)
 
         return jsonify({"message": "File metadata stored and sent to Kafka"}), 200
