@@ -1,8 +1,12 @@
 import json
+import logging
 from kafka import KafkaConsumer
 from minio import Minio
 
-KAFKA_BROKER = "localhost:9092"
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+KAFKA_BROKER = "kafka:9092"
+logging.info(KAFKA_BROKER)
 KAFKA_TOPIC = "file_topic"
 
 MINIO_CLIENT = Minio(
@@ -25,13 +29,10 @@ for message in consumer:
         bucket_name = data["bucket_name"]
         object_name = data["object_name"]
 
-        # Open the file as a stream
         with open(file_address, 'rb') as file_stream:
-            # Ensure the bucket exists in MinIO
             if not MINIO_CLIENT.bucket_exists(bucket_name):
                 MINIO_CLIENT.make_bucket(bucket_name)
 
-            # Upload the file stream to MinIO
             MINIO_CLIENT.put_object(
                 bucket_name, object_name, file_stream, length=-1, part_size=10*1024*1024
             )

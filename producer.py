@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 KAFKA_BROKER = "kafka:9092"
 logging.info(KAFKA_BROKER)
-KAFKA_TOPIC = "file_topic_moz"
+KAFKA_TOPIC = "file_topic"
 
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_BROKER,
