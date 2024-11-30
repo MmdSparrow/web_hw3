@@ -92,8 +92,7 @@ services:
       - mynetwork
 
   consumer:
-    # restart: on-failure
-    restart: always
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile.consumer

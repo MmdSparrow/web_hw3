@@ -28,3 +28,6 @@ kafka-ui:
 
 # see kafka ui in browser
 http://localhost:8080
+
+
+https://stackoverflow.com/questions/39529511/what-is-the-use-of-consumer-offsets-and-schema-topics-in-kafka

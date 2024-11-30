@@ -80,6 +80,7 @@ for message in consumer:
 
             MINIO_CLIENT.fput_object(bucket_name, object_name, file_address)
             print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
+            break
         
         except FileNotFoundError:
             print(f"File not found at address: {file_address}")
