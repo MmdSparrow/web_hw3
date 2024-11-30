@@ -1,7 +1,7 @@
-import psycopg2
 import json
-from logging import log
 import logging
+import psycopg2
+from logging import log
 from kafka import KafkaProducer
 from flask import Flask, request, jsonify
 
@@ -44,8 +44,10 @@ def upload_simpleapi_database():
     file_id = data.get("file_id")
     bucket_name = data.get("bucket_name")
     object_name = data.get("object_name")
+    eTag = data.get("etag")
+    size = data.get("size")
 
-    if not all([file_address, file_id, bucket_name, object_name]):
+    if not all([file_address, file_id, bucket_name, object_name, eTag, size]):
         return jsonify({"error": "All fields are required"}), 400
 
     try:
@@ -60,16 +62,11 @@ def upload_simpleapi_database():
         conn.close()
 
         producer.send(KAFKA_TOPIC, value=data).add_callback(on_send_success).add_errback(on_send_error)
-        # producer.flush(timeout=10)
         producer.flush()
 
         return jsonify({"message": "File metadata stored and sent to Kafka"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    # finally:
-    #     producer.close()
-    #     # producer.close(timeout=5)
-    #     logging.info("Kafka producer closed.")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
