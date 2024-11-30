@@ -48,9 +48,10 @@ for message in consumer:
         cur = conn.cursor()
         update_query = """
         UPDATE file_metadata
-        SET size = %s, etag = %s
+        SET file_size = %s, etag = %s
         WHERE file_id = %s;
         """
+        logging.info("writing on databse..........")
         cur.execute(
             update_query,
             (size, etag, file_id)
@@ -59,14 +60,25 @@ for message in consumer:
         cur.close()
         conn.close()
 
-        with open(file_address, 'rb') as file_stream:
-            if not MINIO_CLIENT.bucket_exists(bucket_name):
-                MINIO_CLIENT.make_bucket(bucket_name)
+        # 1
+        if not MINIO_CLIENT.bucket_exists(bucket_name):
+            MINIO_CLIENT.make_bucket(bucket_name)
 
-            MINIO_CLIENT.put_object(
-                bucket_name, object_name, file_stream, length=-1, part_size= size
-            )
-            print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
+        logging.info("writing on bucket..........")
+
+        MINIO_CLIENT.fput_object(bucket_name, object_name, file_address)
+        print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
+        
+        # 2
+        # with open(file_address, 'rb') as file_stream:
+        #     if not MINIO_CLIENT.bucket_exists(bucket_name):
+        #         MINIO_CLIENT.make_bucket(bucket_name)
+
+        #     MINIO_CLIENT.put_object(
+        #         bucket_name, object_name, file_stream, length=-1, part_size= size
+        #     )
+        #     print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
+
     except FileNotFoundError:
         print(f"File not found at address: {file_address}")
     except Exception as e:
