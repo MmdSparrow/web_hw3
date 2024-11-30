@@ -43,10 +43,8 @@ def upload_simpleapi_database():
     file_id = data.get("file_id")
     bucket_name = data.get("bucket_name")
     object_name = data.get("object_name")
-    eTag = data.get("etag")
-    size = data.get("size")
 
-    if not all([file_address, file_id, bucket_name, object_name, eTag, size]):
+    if not all([file_address, file_id, bucket_name, object_name]):
         return jsonify({"error": "All fields are required"}), 400
 
     try:

@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 import psycopg2
@@ -53,10 +54,18 @@ for message in consumer:
             file_id = data["file_id"]
             bucket_name = data["bucket_name"]
             object_name = data["object_name"]
-            file_id = data["file_id"]
-            etag = data["etag"]
-            size = int(data["size"])
+            size = os.path.getsize(file_address)
 
+            if not MINIO_CLIENT.bucket_exists(bucket_name):
+                MINIO_CLIENT.make_bucket(bucket_name)
+
+            logging.info("writing on bucket..........")
+
+            minio_result= MINIO_CLIENT.fput_object(bucket_name, object_name, file_address)
+            print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
+
+            etag= minio_result.etag
+            
             conn = psycopg2.connect(**DB_CONFIG)
             cur = conn.cursor()
             update_query = """
@@ -73,15 +82,8 @@ for message in consumer:
             cur.close()
             conn.close()
 
-            if not MINIO_CLIENT.bucket_exists(bucket_name):
-                MINIO_CLIENT.make_bucket(bucket_name)
-
-            logging.info("writing on bucket..........")
-
-            MINIO_CLIENT.fput_object(bucket_name, object_name, file_address)
-            print(f"File {object_name} uploaded to MinIO bucket {bucket_name}.")
             break
-        
+
         except FileNotFoundError:
             print(f"File not found at address: {file_address}")
             break
