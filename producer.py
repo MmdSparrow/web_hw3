@@ -16,8 +16,10 @@ DB_CONFIG = {
     "port": 5432
 }
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 KAFKA_BROKER = "kafka:9092"
-logging.INFO(KAFKA_BROKER)
+logging.info(KAFKA_BROKER)
 KAFKA_TOPIC = "file_topic_moz"
 
 producer = KafkaProducer(

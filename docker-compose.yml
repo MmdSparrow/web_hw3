@@ -78,7 +78,7 @@ services:
       - mynetwork
 
   producer:
-    restart: always
+    restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile.producer
@@ -92,16 +92,18 @@ services:
     networks:
       - mynetwork
 
-  # consumer:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.consumer
-  #   depends_on:
-  #     - kafka
-  #     - db
-  #     - minio
-  #   networks:
-  #     - mynetwork
+  consumer:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    depends_on:
+      - kafka
+      - zookeeper
+      - db
+      - minio
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data:
